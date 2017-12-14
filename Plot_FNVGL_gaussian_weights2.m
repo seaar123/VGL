@@ -1,22 +1,25 @@
-
+fgfgfg=hfhf
 clear
 clc
-close all
 %loading a max_run
-filenammm0=['Parameters_05_X' num2str(1) '.mat'];
-load(filenammm0,'s_Theta2_I2_a','s_Theta2_I1_a','s_Theta2_I2_c','s_Theta2_I1_c','NumOutVars_a','NumRules_a','NumInTerms_a','NumInVars_c','NumInTerms_c','NumOutVars_c','x0d0_S_c','NumRules_c','x0d0_S_a','NumInVars_a','x0d0_F_c','x0d0_F_a');
+filenammm0=['Parameters_05_X' num2str(3) '.mat'];
+load(filenammm0);
 
 %% ciritc rfnn
 %-------initial states x(t)
 %initial value for linear velocity
-S=-200;%1;0
+v=5;%1;0
 %initial value for angular velocity
-F=300;%-1;
+w=5;%-1;
 %-------- States
-
+V(1,:)=[v,w];
 % inital states range
-
-    x = S:0.1:F;
+ll=11;
+if V(1,1)<=V(1,2)
+    x = ll*V(1,1):0.1:V(1,2)*ll;
+else
+    x = ll*V(1,2):0.1:V(1,1)*ll;
+end
 
 %initial paramters
 % Unpack the network's parameters first...
@@ -100,15 +103,15 @@ figure
 subplot(2,1,1)
 for row = 1 :  NumInTerms
     
-    plot(x*0.1,y1(row,:)*0.1,'r','LineWidth',2)
+    plot(x,y1(row,:),'r','LineWidth',2)
     hold on
     
-    plot(x*0.1,yy1(row,:)*0.1,'g','LineWidth',2)
+    plot(x,yy1(row,:),'g','LineWidth',2)
 end
 legend('Initial G^{1:m}_1','Final G^{1:m}_1')
 grid on
-title({'Initial and Final Learned Gaussian Membership Functions (GMFs) of ';' The Critic Netwrok of RNF-VGL(\lambda) for One of The Runs ';' ';'GMFs for The Linear Velocity Input State to The Critic Network'})
-xlabel('Linear Velocity Universes of Discourse')
+title({'Initial and Final Learned Gaussian Membership Functions (GMFs) of Critic Netwrok ';' of RFNN-VGL(\lambda) for One of The Runs ';' ';'Frist Layer GMFs for The Linear Velocity Input State to The Critic Network'})
+xlabel('Linear Velocity Universes of Discourse (U_1)')
 ylabel( 'GMFs')
 
 
@@ -124,15 +127,15 @@ end
 subplot(2,1,2)
 for row = 1 :  NumInTerms
     
-    plot(x*0.1,y2(row,:)*0.1,'r','LineWidth',2)
+    plot(x,y2(row,:),'r','LineWidth',2)
     hold on
     
-    plot(x*0.1,yy2(row,:)*0.1,'g','LineWidth',2)
+    plot(x,yy2(row,:),'g','LineWidth',2)
 end
 legend('Initial G^{1:m}_2','Final G^{1:m}_2')
 grid on
 title({'GMFs for The Angular Velocity Input State to The Critic Network'})
-xlabel('Angular Velocity Universes of Discourse')
+xlabel('Frist Layer Angular Velocity Universes of Discourse (U_2)')
 ylabel( 'GMFs')
 
 
@@ -220,15 +223,15 @@ figure
 subplot(2,1,1)
 for row = 1 :  NumInTerms
     
-    plot(x*0.1,ya1(row,:)*0.1,'r','LineWidth',2)
+    plot(x,ya1(row,:),'r','LineWidth',2)
     hold on
     
-    plot(x*0.1,yya1(row,:)*0.1,'g','LineWidth',2)
+    plot(x,yya1(row,:),'g','LineWidth',2)
 end
 legend('Initial G^{1:m}_1','Final G^{1:m}_1')
 grid on
-title({'Initial and Final Learned Gaussian Membership Functions (GMFs) of ';' The Actor Netwrok of RNF-VGL(\lambda) for One of The Runs ';' ';'GMFs for The Linear Velocity Input State to The Actor Network'})
-xlabel('Linear Velocity Universes of Discourse')
+title({'Initial and Final Learned Gaussian Membership Functions (GMFs) of Actor Netwrok ';' of RFNN-VGL(\lambda) for One of The Runs ';' ';' Frist Layer GMFs for The Linear Velocity Input State to The Actor Network'})
+xlabel('Linear Velocity Universes of Discourse (U_1)')
 ylabel( 'GMFs')
 
 
@@ -247,110 +250,110 @@ end
 subplot(2,1,2)
 for row = 1 :  NumInTerms
     
-    plot(x*0.1,ya2(row,:)*0.1,'r','LineWidth',2)
+    plot(x,ya2(row,:),'r','LineWidth',2)
     hold on
     
-    plot(x*0.1,yya2(row,:)*0.1,'g','LineWidth',2)
+    plot(x,yya2(row,:),'g','LineWidth',2)
 end
 legend('Initial G^{1:m}_1','Final G^{1:m}_1')
 grid on
-title({'GMFs for The Angular Velocity Input State to The Actor Network'})
-xlabel('Angular Velocity Universes of Discourse')
-ylabel('GMFs')
+title({'Frist Layer GMFs for The Angular Velocity Input State to The Actor Network'})
+xlabel('Angular Velocity Universes of Discourse (U_2)')
+ylabel( 'GMFs')
 
 
 
 
 
 %% drowing weights
-% figure
-% %weight for output 1
-% [nn,mm,kk]=size(s_W_O1_c);
-% Bd1 = reshape(s_W_O1_c,[nn mm*kk]);
-% subplot(2,1,1)
-% plot(Bd1','LineWidth',1)
-% grid on
-% title({'Deviation of Weights from Initialized Values of Critic Netwrok ';' of RFNN-VGL(\lambda) for One of The Runs ';' ';'Connected Output Layer Weights (W_{R,1}) to g(x_1) of The Critic Network'})
-% xlabel('Total Training Steps')
-% ylabel( 'W_{R,1}')
+figure
+%weight for output 1
+[nn,mm,kk]=size(s_W_O1_c);
+Bd1 = reshape(s_W_O1_c,[nn mm*kk]);
+subplot(2,1,1)
+plot(Bd1','LineWidth',1)
+grid on
+title({'Deviation of Weights from Initialized Values of Critic Netwrok ';' of RFNN-VGL(\lambda) for One of The Runs ';' ';'Connected Output Layer Weights (W_{R,1}) to g(x_1) of The Critic Network'})
+xlabel('Total Training Steps')
+ylabel( 'W_{R,1}')
 
 
 
 %weight for output 2
-% [nn,mm,kk]=size(s_W_O2_c);
-% Bd2 = reshape(s_W_O2_c,[nn mm*kk]);
-% subplot(2,1,2)
-% plot(Bd2','LineWidth',1)
-% grid on
-% title({'Connected Output Layer Weights (W_{R,2}) to g(x_2) of The Critic Network'})
-% xlabel('Total Training Steps')
-% ylabel('W_{R,2}')
+[nn,mm,kk]=size(s_W_O2_c);
+Bd2 = reshape(s_W_O2_c,[nn mm*kk]);
+subplot(2,1,2)
+plot(Bd2','LineWidth',1)
+grid on
+title({'Connected Output Layer Weights (W_{R,2}) to g(x_2) of The Critic Network'})
+xlabel('Total Training Steps')
+ylabel('W_{R,2}')
 
 
 
 figure
 %theta for input 1
 [nn,mm,kk]=size( s_Theta2_I1_c);
-Bd3 = reshape( s_Theta2_I1_c*0.1,[nn mm*kk]);
+Bd3 = reshape( s_Theta2_I1_c,[nn mm*kk]);
 subplot(2,1,1)
 plot(Bd3','LineWidth',2)
 grid on
-title({'Deviation of \theta from Initialized Values of The Critic ';' Netwrok of RNF-VGL(\lambda) for One of The Runs ';' ';'Recurrent Parampters for Frist State of The Critic Network'})
+title({'Deviation of \theta from Initialized Values of Critic Netwrok ';' of RFNN-VGL(\lambda) for One of The Runs ';' ';'Recurrent Parampters for Frist Input State for GMFs of The Critic Network'})
 xlabel('Total Training Steps')
 ylabel( '\theta^{1:m}_1')
 
 %theta for input 2
 [nn,mm,kk]=size( s_Theta2_I2_c);
-Bd4 = reshape( s_Theta2_I2_c*0.1,[nn mm*kk]);
+Bd4 = reshape( s_Theta2_I2_c,[nn mm*kk]);
 subplot(2,1,2)
 plot(Bd4','LineWidth',2)
 grid on
-title({' Recurrent Parampters for Second State of The Critic Network'})
+title({' Recurrent Parampters for Second Input State for GMFs of The Critic Network'})
 xlabel('Total Training Steps')
 ylabel( '\theta^{1:m}_2')
 
 
-% %%
-% figure
-% % storing weights for actor
-% [nn,mm,kk]=size(s_W_O1_a);
-% Bd11 = reshape(s_W_O1_a,[nn mm*kk]);
-% subplot(2,1,1)
-% plot(Bd11','LineWidth',1)
-% grid on
-% title({'Deviation of Weights from Initialized Values of The Actor Netwrok ';' of RFNN-VGL(\lambda) for One of The Runs ';' ';'Connected Output Layer Weights (W_{R,1}) to g(x_1) of The Actor Network'})
-% xlabel('Total Training Steps')
-% ylabel( 'W_{R,1}')
-% 
-% %weight for output 2
-% [nn,mm,kk]=size(s_W_O2_a);
-% Bd21 = reshape(s_W_O2_a,[nn mm*kk]);
-% subplot(2,1,2)
-% plot(Bd21','LineWidth',1)
-% grid on
-% title({'Connected Output Layer Weights (W_{R,2}) to g(x_2) of The Actor Network'})
-% xlabel('Total Training Steps')
-% ylabel('W_{R,2}')
+%%
+figure
+% storing weights for actor
+[nn,mm,kk]=size(s_W_O1_a);
+Bd11 = reshape(s_W_O1_a,[nn mm*kk]);
+subplot(2,1,1)
+plot(Bd11','LineWidth',1)
+grid on
+title({'Deviation of Weights from Initialized Values of The Actor Netwrok ';' of RFNN-VGL(\lambda) for One of The Runs ';' ';'Connected Output Layer Weights (W_{R,1}) to g(x_1) of The Actor Network'})
+xlabel('Total Training Steps')
+ylabel( 'W_{R,1}')
+
+%weight for output 2
+[nn,mm,kk]=size(s_W_O2_a);
+Bd21 = reshape(s_W_O2_a,[nn mm*kk]);
+subplot(2,1,2)
+plot(Bd21','LineWidth',1)
+grid on
+title({'Connected Output Layer Weights (W_{R,2}) to g(x_2) of The Actor Network'})
+xlabel('Total Training Steps')
+ylabel('W_{R,2}')
 
 
 figure
 %theta for input 1
 [nn,mm,kk]=size( s_Theta2_I1_a);
-Bd31 = reshape( s_Theta2_I1_a*0.1,[nn mm*kk]);
+Bd31 = reshape( s_Theta2_I1_a,[nn mm*kk]);
 subplot(2,1,1)
 plot(Bd31','LineWidth',2)
 grid on
-title({'Deviation of \theta from Initialized Values of The Actor ';' Netwrok of RNF-VGL(\lambda) for One of The Runs ';' ';'Recurrent Parampters for Frist State of The Actor Network'})
+title({'Deviation of \theta from Initialized Values of The Actor Netwrok ';' of RFNN-VGL(\lambda) for One of The Runs ';' ';'Recurrent Parampters for Frist Input State for GMFs of The Actor Network'})
 xlabel('Total Training Steps')
 ylabel( '\theta^{1:m}_1')
 
 
 %theta for input 2
 [nn,mm,kk]=size( s_Theta2_I2_a);
-Bd41 = reshape( s_Theta2_I2_a*0.1,[nn mm*kk]);
+Bd41 = reshape( s_Theta2_I2_a,[nn mm*kk]);
 subplot(2,1,2)
 plot(Bd41','LineWidth',2)
 grid on
-title({' Recurrent Parampters for Second State of The Actor Network'})
+title({' Recurrent Parampters for Second Input State for GMFs of The Actor Network'})
 xlabel('Total Training Steps')
 ylabel( '\theta^{1:m}_2')
